@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DisposableCamera</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="no_camera_title">No Camera Detected</string>
+    <string name="no_camera_text">This device does not have a usable camera.</string>
+    <string name="photo_directory">Developed Photos</string>
+    <string name="internal_file">internalFilePath</string>
+    <string name="external_file">externalFilePath</string>
+
+</resources>
