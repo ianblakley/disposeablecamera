@@ -6,11 +6,13 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,20 +38,38 @@ public class CameraActivity extends Activity {
     private CameraOpener opener;
     public Camera mCamera;
     public CameraPreview mPreview;
+    public SharedPreferences preferences;
+    public ImageButton flashButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_camera);
+
+        //Starts the camera
         detectCamera();
         opener = new CameraOpener();
         opener.run();
         mCamera = opener.getCamera();
+
+        //Retrieves settings
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        setContentView(R.layout.activity_camera);
+
+        //Sets Up UI
+        flashButton = (ImageButton) findViewById(R.id.flash_button);
+        setFlash();
+        flashButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                toggleFlash();
+            }
+        });
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout)findViewById(R.id.camera_preview);
         preview.addView(mPreview);
-
         Button capture = (Button)findViewById(R.id.capture_button);
         capture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,29 +188,30 @@ public class CameraActivity extends Activity {
         }
     }
 
-
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_camera, menu);
-        return true;
+    private void setFlash(){
+        int flash_preference = preferences.getInt("preference_flash", 0);
+        Camera.Parameters mCameraParameters = mCamera.getParameters();
+        switch (flash_preference) {
+            case (0):
+                mCameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+                flashButton.setImageResource(R.drawable.ic_action_flash_automatic);
+                break;
+            case (1):
+                mCameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                flashButton.setImageResource(R.drawable.ic_action_flash_on);
+                break;
+            case (2):
+                mCameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                flashButton.setImageResource(R.drawable.ic_action_flash_off);
+                break;
+        }
+        mCamera.setParameters(mCameraParameters);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    private void toggleFlash(){
+        int flash = preferences.getInt("preference_flash", 0);
+        flash = (flash+1)%3;
+        preferences.edit().putInt("preference_flash", flash).apply();
+        setFlash();
     }
 }
