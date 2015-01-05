@@ -9,6 +9,11 @@
     <string name="photo_directory">Developed Photos</string>
     <string name="internal_file">internalFilePath</string>
     <string name="external_file">externalFilePath</string>
-    <string name="title_activity_camera_roll">CameraRollActivity</string>
+    <string name="title_activity_camera_roll">Camera Roll</string>
+    <string name="camera_roll_list_filename">camera_roll_list</string>
+    <string name="clear_roll">Clear Camera Roll</string>
+    <string name="set_development_time">Change Development Time</string>
+    <string name="title_activity_view_picture">ViewPictureActivity</string>
+    <string name="title_activity_splash">Disposable Camera</string>
 
 </resources>

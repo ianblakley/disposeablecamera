@@ -2,16 +2,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
-        android:key="preference_flash"
         android:defaultValue="0"
-        />
+        android:key="preference_flash" />
 
-    <Preference
-        android:key="preference_development_mode"
-        android:defaultValue="0"
-        />
-
-
+    <EditTextPreference
+        android:defaultValue="8"
+        android:inputType="number"
+        android:key="preference_development_time"
+        android:title="@string/set_development_time" />
 
 
 </PreferenceScreen>

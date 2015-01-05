@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,22 +15,19 @@ import java.nio.channels.FileChannel;
 
 /**
  * Created by Ian on 12/23/2014.
+ * This class receives the development alarm and moves the picture from internal to external memory, adds it to the gallery and adds it to the camera roll
  */
 public class DevelopmentReceiver extends BroadcastReceiver {
     Context context;
 
-    public DevelopmentReceiver(){
-
-    }
-
     @Override
-    public void onReceive(Context context, Intent intent){
+    public void onReceive(Context context, Intent intent) {
         this.context = context;
         Bundle fileNames = intent.getExtras();
-        File internal = (File)fileNames.get(context.getString(R.string.internal_file));
-        File external = (File)fileNames.get(context.getString(R.string.external_file));
+        File internal = (File) fileNames.get(context.getString(R.string.internal_file));
+        File external = (File) fileNames.get(context.getString(R.string.external_file));
 
-        try{
+        try {
             FileInputStream fil = new FileInputStream(internal);
             FileOutputStream fos = new FileOutputStream(external);
             FileChannel inChannel = fil.getChannel();
@@ -40,16 +35,17 @@ public class DevelopmentReceiver extends BroadcastReceiver {
             inChannel.transferTo(0, inChannel.size(), outChannel);
             fil.close();
             fos.close();
-            internal.delete();
+            boolean deleted = internal.delete();
+            if (!deleted) {
+                Log.d("File Error", "File Not Deleted");
+            }
             addPicToGallery(external);
-        } catch (IOException e){
+        } catch (IOException e) {
             Log.d(context.getString(R.string.app_name), "Unable to copy data");
         }
-        Toast toast = Toast.makeText(context, "New Photo Developed", Toast.LENGTH_SHORT);
-        toast.show();
     }
 
-    private void addPicToGallery(File picture){
+    private void addPicToGallery(File picture) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri uri = Uri.fromFile(picture);
         mediaScanIntent.setData(uri);

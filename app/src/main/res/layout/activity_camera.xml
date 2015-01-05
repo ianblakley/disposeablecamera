@@ -6,30 +6,33 @@
 
     <FrameLayout
         android:id="@+id/camera_preview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-    />
+        android:layout_width="@android:dimen/thumbnail_width"
+        android:layout_height="@android:dimen/thumbnail_height"
+        android:layout_gravity="top|center" />
 
     <Button
         android:id="@+id/capture_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Take Picture"
-        android:layout_gravity="bottom|center_horizontal"
-    />
+        android:layout_gravity="top|end"
+
+        />
 
     <ImageButton
         android:id="@+id/flash_button"
-        android:src="@drawable/ic_action_flash_automatic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"/>
+        android:layout_gravity="top|start"
+        android:contentDescription="Toggle Flash"
+        android:src="@drawable/ic_action_flash_automatic" />
+
 
     <ImageButton
-        android:id="@+id/settings_button"
-        android:src="@drawable/ic_action_settings"
+        android:id="@+id/roll_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"/>
+        android:layout_gravity="bottom|center"
+        android:contentDescription="Camera Roll"
+        android:src="@drawable/ic_action_settings" />
 
 </FrameLayout>
